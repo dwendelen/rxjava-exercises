@@ -9,23 +9,23 @@ import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Starters1Test {
-    private Starters1 starters = new Starters1();
+public class StartersChapter2Test {
+    private StartersChapter2 starters = new StartersChapter2();
     private TestSubscriber<Integer> testSubscriber = TestSubscriber.create();
 
     /**
      * Task 1
      *
      * Your task:
-     * - Implement Starters1.observe
+     * - Implement StartersChapter2.observe
      *
-     * The class Starters1 counts the number of events in an observable.
-     * To count the number of events, pass the observable to Starters1.observe().
-     * You can then retrieve the count with Starters1.getNbOfEvents()
+     * The class StartersChapter2 counts the number of events in an observable.
+     * To count the number of events, pass the observable to StartersChapter2.observe().
+     * You can then retrieve the count with StartersChapter2.getNbOfEvents()
      *
-     * You can also check if the observable has completed with Starters1.isCompleted()
+     * You can also check if the observable has completed with StartersChapter2.isCompleted()
      *
-     * Stream can also fail. The error can be retrieved with Starters1.getError().
+     * Stream can also fail. The error can be retrieved with StartersChapter2.getError().
      * It will return null when there were no errors.
      *
      * Hints:
@@ -78,9 +78,9 @@ public class Starters1Test {
      * Task 2
      *
      * Your task:
-     * - Implement the factory methods in Starters1 with Observable.create()
+     * - Implement the factory methods in StartersChapter2 with Observable.create()
      *
-     * Starters1 implements a few factory methods to create Observables.
+     * StartersChapter2 implements a few factory methods to create Observables.
      * This list of methods happens to be the same list as mentioned in the
      * book, what a coincidence.
      *
@@ -90,7 +90,7 @@ public class Starters1Test {
      */
     @Test
     public void just_acceptsAnInteger() throws Exception {
-        Starters1.just(1)
+        StartersChapter2.just(1)
                 .subscribe(testSubscriber);
 
         testSubscriber.assertValue(1);
@@ -99,7 +99,7 @@ public class Starters1Test {
 
     @Test
     public void just_acceptsNull() throws Exception {
-        Starters1.just((Integer)null)
+        StartersChapter2.just((Integer)null)
                 .subscribe(testSubscriber);
 
         testSubscriber.assertValue(null);
@@ -108,7 +108,7 @@ public class Starters1Test {
 
     @Test
     public void from_acceptsIntegers() throws Exception {
-        Starters1.from(Arrays.asList(1, 2))
+        StartersChapter2.from(Arrays.asList(1, 2))
                 .subscribe(testSubscriber);
 
         testSubscriber.assertValues(1, 2);
@@ -117,7 +117,7 @@ public class Starters1Test {
 
     @Test
     public void from_acceptsAMixOfIntegersAndNull() throws Exception {
-        Starters1.from(Arrays.asList(1, null, 2))
+        StartersChapter2.from(Arrays.asList(1, null, 2))
                 .subscribe(testSubscriber);
 
         testSubscriber.assertValues(1, null, 2);
@@ -126,7 +126,7 @@ public class Starters1Test {
 
     @Test
     public void range() throws Exception {
-        Starters1.range(3, 5)
+        StartersChapter2.range(3, 5)
                 .subscribe(testSubscriber);
 
         testSubscriber.assertValues(3, 4, 5, 6, 7);
@@ -135,7 +135,7 @@ public class Starters1Test {
 
     @Test
     public void range_acceptsCountZero() throws Exception {
-        Starters1.range(5, 0)
+        StartersChapter2.range(5, 0)
                 .subscribe(testSubscriber);
 
         testSubscriber.assertNoValues();
@@ -144,12 +144,12 @@ public class Starters1Test {
 
     @Test(expected = IllegalArgumentException.class)
     public void range_doesNotAcceptANegativeCount() throws Exception {
-        Starters1.range(0, -1);
+        StartersChapter2.range(0, -1);
     }
 
     @Test
     public void empty() throws Exception {
-        Starters1.<Integer>empty()
+        StartersChapter2.<Integer>empty()
                 .subscribe(testSubscriber);
 
         testSubscriber.assertNoValues();
@@ -160,7 +160,7 @@ public class Starters1Test {
     public void never_doesNotComplete() throws Exception {
         testSubscriber.awaitTerminalEvent(1, TimeUnit.SECONDS);
 
-        Starters1.<Integer>never()
+        StartersChapter2.<Integer>never()
                 .subscribe(testSubscriber);
 
         testSubscriber.assertNotCompleted();
@@ -170,7 +170,7 @@ public class Starters1Test {
     public void error() throws Exception {
         RuntimeException myException = new RuntimeException("MyException");
 
-        Starters1.<Integer>error(myException)
+        StartersChapter2.<Integer>error(myException)
                 .subscribe(testSubscriber);
 
         testSubscriber.assertError(myException);

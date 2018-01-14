@@ -3,7 +3,7 @@ package starters;
 import rx.Observable;
 import rx.Observer;
 
-public class Starters1 {
+public class StartersChapter2 {
     /*
      * Task 1: Counting events
      */
@@ -44,6 +44,7 @@ public class Starters1 {
      * Converts an {@link Iterable} sequence into an Observable that emits the items in the sequence.
      */
     public static <T> Observable<T> from(Iterable<? extends T> iterable) {        //TODO
+        //TODO
         throw new UnsupportedOperationException();
     }
 
@@ -54,6 +55,7 @@ public class Starters1 {
      *             if {@code count} is less than zero
      */
     public static Observable<Integer> range(int start, int count) {        //TODO
+        //TODO
         throw new UnsupportedOperationException();
     }
 
