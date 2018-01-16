@@ -17,7 +17,7 @@ public class PhoneD {
         ClockController clockController = new ClockController(clockWidget, clockService);
 
         NotificationWidget notificationWidget = new NotificationWidget();
-        FileSystemNotificationService notificationService = new FileSystemNotificationService(new FileSystem());
+        FileSystemNotificationService notificationService = new FileSystemNotificationService(new FileSystem(), 200);
         NotificationController notificationController = new NotificationController(notificationWidget, notificationService);
 
         Window window = new Window(clockWidget);
@@ -31,7 +31,6 @@ public class PhoneD {
 
         window.show();
 
-        clockService.printCurrentTime();
         notificationService.printDirectoryAndContent();
     }
 }

@@ -17,12 +17,8 @@ public class ClockService {
     public void init() {
     }
 
-    public void printCurrentTime() {
-        System.out.println("The time is now: " + LocalDateTime.now(clock));
-    }
-
     public Observable<LocalDateTime> getTime() {
         //TODO Emit the time every tickInterval milliseconds
-        return Observable.empty();
+        return Observable.just(LocalDateTime.now(clock));
     }
 }

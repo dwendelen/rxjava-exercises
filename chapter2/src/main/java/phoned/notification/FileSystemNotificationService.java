@@ -3,18 +3,22 @@ package phoned.notification;
 import rx.Observable;
 
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class FileSystemNotificationService implements NotificationService {
     private FileSystem fileSystem;
+    private int pollingInterval;
 
     private Path directory;
 
-    public FileSystemNotificationService(FileSystem fileSystem) {
+    public FileSystemNotificationService(FileSystem fileSystem, int pollingInterval) {
         this.fileSystem = fileSystem;
+        this.pollingInterval = pollingInterval;
     }
 
     public void init() throws IOException {
@@ -28,7 +32,7 @@ public class FileSystemNotificationService implements NotificationService {
         fileSystem.walkFileTree(directory, new SimpleFileVisitor<Path>() {
             @Override
             public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) throws IOException {
-                System.out.println("Found file: " + path.toString());
+                System.out.println("Found file: " + path.getName(path.getNameCount() - 1).toString());
 
                 return FileVisitResult.CONTINUE;
             }
@@ -38,16 +42,24 @@ public class FileSystemNotificationService implements NotificationService {
     @Override
     public Observable<Notification> getNotifications() {
         //TODO Poll for new files and emit notifications
-        return Observable.empty();
+        //TODO Remove dummy
+        Notification dummy = new Notification();
+        dummy.id = "dummy";
+        dummy.title = "dummy";
+        dummy.body = "This is a dummy notification.\nIt should be deleted.";
+
+        return Observable.just(dummy);
     }
 
     private Notification createNotificationFromFile(Path path) throws IOException {
-        Stream<String> lines = fileSystem.lines(path);
-
         Notification notification = new Notification();
-        notification.id = path.getName(-1).toString();
-        notification.title = lines.findFirst().orElse("<empty file>");
-        notification.body = lines.skip(1).collect(Collectors.joining("\n"));
+        notification.id = path.getName(path.getNameCount() - 1).toString();
+        notification.title = fileSystem.lines(path)
+                .findFirst()
+                .orElse("<empty file>");
+        notification.body = fileSystem.lines(path)
+                .skip(1)
+                .collect(Collectors.joining("\n"));
 
         return notification;
     }
