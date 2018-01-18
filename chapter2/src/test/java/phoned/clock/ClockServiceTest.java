@@ -29,6 +29,24 @@ public class ClockServiceTest {
         clockService.init();
     }
 
+    /*
+     * Welcome to the ClockService.
+     *
+     * ClockService.getTime() returns an observable that ticks once every
+     * TICK_INTERVAL. Every tick will produce the current time.
+     */
+
+    /*
+     * Task 3
+     *
+     * Your task:
+     * - Create a naive observable with Observable.create() that returns the
+     *      current time every TICK_INTERVAL in loop.
+     *
+     * You think lets start simple. I want just an infinite loop that emits the
+     * current time. That can't be that hard.
+     */
+
     @Test
     public void theClockServiceTicksAtTheCorrectPace() throws Exception {
         clockService.getTime()
@@ -57,6 +75,14 @@ public class ClockServiceTest {
         );
     }
 
+    /*
+     * Task 3
+     *
+     * Your task:
+     * - Handle exceptions properly
+     *
+     * The loop looks good, but we have not thought about error handling yet.
+     */
     @Test
     public void theClockServiceHandlesExceptionsGracefully() throws Exception {
         when(clock.instant())
@@ -75,6 +101,17 @@ public class ClockServiceTest {
         testSubscriber.assertError(NullPointerException.class);
     }
 
+    /*
+     * Task 4
+     *
+     * Your task:
+     * - Stop emitting events when the subscriber unsubscribes.
+     *
+     * It starts to look good! But you suddenly remember that you are building
+     * a smartphone. And battery life matters. You remember that consulting the
+     * clock requires a lot of energy. We should not emit the current time when
+     * no one is interested.
+     */
     @Test
     public void theObservableStopsRunningWhenTheSubscriberUnsubscribes() throws Exception {
         clockService.getTime()
@@ -89,6 +126,16 @@ public class ClockServiceTest {
         verify(clock, times(1)).instant();
     }
 
+    /*
+     * Task 5
+     *
+     * Your task:
+     * - There should be only one thread running, even with multiple subscribers
+     *
+     * Now that you have fixed the energy usage you suddenly remember that the
+     * clock was built by a first year student. You also remember that it behaves
+     * funky when multiple thread try to access it.
+     */
     @Test
     public void theClockIsOnlyPolledFromOneSource() throws Exception {
         clockService.getTime()
@@ -102,6 +149,17 @@ public class ClockServiceTest {
 
         verify(clock, times(1)).instant();
     }
+
+    /*
+     * The ClockServices seems to work as expected. You run PhoneD again and
+     * you see that the clock is updated. Splendid!
+     *
+     * Next, we will fix the notifications.
+     */
+
+    /*
+     * Go to FileSystemNotificationServiceTest
+     */
 
     private Clock mockClock() {
         Clock clock = mock(Clock.class);

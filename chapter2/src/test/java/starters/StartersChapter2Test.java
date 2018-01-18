@@ -175,4 +175,10 @@ public class StartersChapter2Test {
 
         testSubscriber.assertError(myException);
     }
+
+    /*
+     * Congratulations, you finished the starters for chapter 2.
+     *
+     * Go to ClockControllerTest to start with the project.
+     */
 }
