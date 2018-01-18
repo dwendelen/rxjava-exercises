@@ -1,11 +1,13 @@
 package phoned;
 
 import phoned.clock.ClockWidget;
+import phoned.notification.NotificationWidget;
 
 import javax.swing.*;
 
 public class Window {
     private ClockWidget clockWidget;
+    private NotificationWidget notificationWidget;
 
     private JFrame frame = new JFrame();
 
@@ -13,8 +15,9 @@ public class Window {
     private GroupLayout.SequentialGroup verticalGroup = layout.createSequentialGroup();
     private GroupLayout.ParallelGroup horizontalGroup = layout.createParallelGroup();
 
-    public Window(ClockWidget clockWidget) {
+    public Window(ClockWidget clockWidget, NotificationWidget notificationWidget) {
         this.clockWidget = clockWidget;
+        this.notificationWidget = notificationWidget;
     }
 
     public void init() {
@@ -31,6 +34,9 @@ public class Window {
 
         clockWidget.init();
         clockWidget.addTo(verticalGroup, horizontalGroup);
+
+        notificationWidget.init();
+        notificationWidget.addTo(verticalGroup, horizontalGroup);
     }
 
     public void show() {

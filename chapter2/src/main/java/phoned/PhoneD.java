@@ -20,7 +20,7 @@ public class PhoneD {
         FileSystemNotificationService notificationService = new FileSystemNotificationService(new FileSystem(), 200);
         NotificationController notificationController = new NotificationController(notificationWidget, notificationService);
 
-        Window window = new Window(clockWidget);
+        Window window = new Window(clockWidget, notificationWidget);
         window.init();
 
         clockService.init();

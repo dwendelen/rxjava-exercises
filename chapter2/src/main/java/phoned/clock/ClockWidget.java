@@ -14,7 +14,7 @@ public class ClockWidget {
 
     public void addTo(GroupLayout.SequentialGroup verticalGroup, GroupLayout.ParallelGroup horizontalGroup) {
         verticalGroup.addComponent(label);
-        horizontalGroup.addComponent(label);
+        horizontalGroup.addComponent(label, GroupLayout.Alignment.CENTER);
     }
 
     public void updateTime(LocalDateTime time) {
