@@ -135,6 +135,9 @@ public class ClockServiceTest {
      * Now that you have fixed the energy usage you suddenly remember that the
      * clock was built by a first year student. You also remember that it behaves
      * funky when multiple thread try to access it.
+     *
+     * You are also wondering why ClockService has a method init(), even though
+     * it is just empty.
      */
     @Test
     public void theClockIsOnlyPolledFromOneSource() throws Exception {
