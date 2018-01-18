@@ -28,6 +28,35 @@ public class FileSystemNotificationServiceTest {
         notificationService.init();
     }
 
+    /*
+     * You are lazy and decide to keep it simple:
+     * - The files are put somewhere in a temporary directory
+     * - When a new file arrives then we emits a notification
+     * - When a file disappears and reappears, then we also emit an event
+     *
+     * The first line of the file is the title.
+     * The other lines are the body.
+     *
+     * For Example:
+     *
+     *      This is the title
+     *      First line of the body
+     *      Line 2 of the body
+     *      Line 3 is the last line
+     *      Unless I want a fourth line
+     *      Or a fifth
+     */
+
+    /*
+     * Task 7
+     *
+     * Your task:
+     * - Implement the FileSystemNotificationService using only Observable.create()
+     *      that polls the filesystem every TICK_INTERVAL
+     *
+     * You have made an observable before and the file system also uses a lot of
+     * battery power. It was also made by that same student.
+     */
     @Test
     public void theNotificationServiceReturnsTheCorrectNotifications() throws Exception {
         fileSystem.mockFiles(1, 2, 3);
@@ -124,6 +153,19 @@ public class FileSystemNotificationServiceTest {
 
         assertThat(fileSystem.getNbOfWalkInvocations()).isEqualTo(1);
     }
+
+    /*
+     * PhoneD should now be complete. You run PhoneD again and are ready to
+     * test the notifications. You look in the console for the temporary
+     * directory. You prepared some files in advance and copy them in the
+     * temporary directory.
+     *
+     * After a long day of hard work, PhoneD is finally working.
+     */
+
+    /*
+     * End of chapter 2
+     */
 
     private void assertFile123() {
         assertThat(testSubscriber.getOnNextEvents())

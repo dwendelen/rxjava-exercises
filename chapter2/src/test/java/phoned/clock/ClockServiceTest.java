@@ -158,7 +158,7 @@ public class ClockServiceTest {
      */
 
     /*
-     * Go to FileSystemNotificationServiceTest
+     * Go to NotificationControllerTest
      */
 
     private Clock mockClock() {
