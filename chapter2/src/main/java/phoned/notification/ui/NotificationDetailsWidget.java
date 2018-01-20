@@ -16,7 +16,6 @@ public class NotificationDetailsWidget {
 
     public void showDetails(Notification notification) {
         textArea.setText(notification.body);
-        textArea.removeMouseListener(textArea.getMouseListeners()[0]);
         textArea.addMouseListener(
                 new MouseAdapter() {
                     @Override

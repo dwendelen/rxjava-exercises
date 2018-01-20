@@ -74,6 +74,7 @@ public class NotificationWidget {
 
         verticalGroup.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE);
         horizontalGroup.addComponent(textField);
+        panel.revalidate();
     }
 
     public void removeNotification(String notificationId) {
