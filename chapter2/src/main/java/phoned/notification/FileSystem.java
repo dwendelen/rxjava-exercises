@@ -14,4 +14,12 @@ public class FileSystem {
     public void walkFileTree(Path directory, FileVisitor<Path> fileVisitor) throws IOException {
         Files.walkFileTree(directory, fileVisitor);
     }
+
+    public void deleteFileIfExists(Path path) {
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

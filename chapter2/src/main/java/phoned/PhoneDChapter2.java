@@ -6,11 +6,11 @@ import phoned.clock.ClockService;
 import phoned.notification.FileSystem;
 import phoned.notification.FileSystemNotificationService;
 import phoned.notification.NotificationController;
-import phoned.notification.NotificationWidget;
+import phoned.notification.ui.NotificationWidget;
 
 import java.time.Clock;
 
-public class PhoneD {
+public class PhoneDChapter2 {
     public static void main(String[] args) throws Exception {
         ClockWidget clockWidget = new ClockWidget();
         ClockService clockService = new ClockService(Clock.systemDefaultZone(), 1000);

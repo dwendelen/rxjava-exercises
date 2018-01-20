@@ -1,18 +1,26 @@
-package phoned.notification;
+package phoned.notification.ui;
+
+import phoned.notification.Notification;
+import rx.Observable;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NotificationWidget {
     private JPanel panel;
     private JScrollPane scrollPanel;
 
     private JTextArea textArea;
+    private NotificationDetailsWidget notificationDetailsWidget;
 
     private GroupLayout layout;
     private GroupLayout.SequentialGroup verticalGroup;
     private GroupLayout.ParallelGroup horizontalGroup;
+
+    private Map<String, JTextField> notifications = new HashMap<>();
 
     public void init() {
         panel = new JPanel();
@@ -33,17 +41,12 @@ public class NotificationWidget {
         scrollPanel.setBorder(BorderFactory.createEmptyBorder());
 
         textArea = new JTextArea();
-        textArea.addMouseListener(
-                new MouseAdapter() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        textArea.setVisible(false);
-                        scrollPanel.setVisible(true);
-                    }
-                }
-        );
         textArea.setEditable(false);
         textArea.setVisible(false);
+
+        notificationDetailsWidget = new NotificationDetailsWidget(textArea);
+        notificationDetailsWidget.getClosedNotificationIds()
+                .subscribe(a -> scrollPanel.setVisible(true));
     }
 
     public void addTo(GroupLayout.SequentialGroup verticalGroup, GroupLayout.ParallelGroup horizontalGroup) {
@@ -61,14 +64,30 @@ public class NotificationWidget {
                 new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
-                        textArea.setText(notification.body);
                         scrollPanel.setVisible(false);
-                        textArea.setVisible(true);
+                        notificationDetailsWidget.showDetails(notification);
                     }
                 }
         );
 
+        notifications.put(notification.id, textField);
+
         verticalGroup.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE);
         horizontalGroup.addComponent(textField);
+    }
+
+    public void removeNotification(String notificationId) {
+        JTextField textField = notifications.get(notificationId);
+
+        if(textField == null) {
+            return;
+        }
+
+        notifications.remove(notificationId);
+        panel.remove(textField);
+    }
+
+    public Observable<String> getClosedNotificationIds() {
+        return notificationDetailsWidget.getClosedNotificationIds();
     }
 }

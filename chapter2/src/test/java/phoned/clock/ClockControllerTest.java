@@ -41,7 +41,7 @@ public class ClockControllerTest {
      * Task 1
      *
      * Your task:
-     * - Run PhoneD
+     * - Run PhoneDChapter2
      *
      * PhoneD has two pieces of functionality:
      * - A clock that displays the current time

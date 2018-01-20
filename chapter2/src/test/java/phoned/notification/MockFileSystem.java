@@ -51,6 +51,11 @@ public class MockFileSystem extends FileSystem {
         }
     }
 
+    @Override
+    public void deleteFileIfExists(Path path) {
+        throw new UnsupportedOperationException();
+    }
+
     public int getNbOfWalkInvocations() {
         return walkInvocations;
     }

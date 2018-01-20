@@ -1,7 +1,7 @@
 package phoned;
 
 import phoned.clock.ClockWidget;
-import phoned.notification.NotificationWidget;
+import phoned.notification.ui.NotificationWidget;
 
 import javax.swing.*;
 

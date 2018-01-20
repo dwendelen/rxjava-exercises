@@ -155,16 +155,11 @@ public class FileSystemNotificationServiceTest {
     }
 
     /*
-     * PhoneD should now be complete. You run PhoneD again and are ready to
-     * test the notifications. You look in the console for the temporary
-     * directory. You prepared some files in advance and copy them in the
-     * temporary directory.
-     *
-     * After a long day of hard work, PhoneD is finally working.
+     * The service is fixed now. Now we can go fix the UI bug.
      */
 
     /*
-     * End of chapter 2
+     * Go to NotificationDetailsWidgetTest
      */
 
     private void assertFile123() {

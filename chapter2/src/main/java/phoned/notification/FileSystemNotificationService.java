@@ -63,4 +63,10 @@ public class FileSystemNotificationService implements NotificationService {
 
         return notification;
     }
+
+    @Override
+    public void removeNotification(String id) {
+        Path path = directory.resolve(id);
+        fileSystem.deleteFileIfExists(path);
+    }
 }
