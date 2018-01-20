@@ -22,7 +22,7 @@ public class NotificationDetailsWidget {
                     public void mouseClicked(MouseEvent e) {
                         textArea.setVisible(false);
                         textArea.removeMouseListener(this);
-                        //TODO Omit an event
+                        //TODO Emit an event
                     }
                 }
         );
