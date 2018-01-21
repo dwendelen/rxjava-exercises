@@ -45,6 +45,8 @@ public class NotificationControllerTest {
 
         when(notificationService.getNotifications())
                 .thenReturn(Observable.just(notification1, notification2));
+        when(notificationWidget.getClosedNotificationIds())
+                .thenReturn(Observable.never());
 
         notificationController.init();
 
@@ -100,6 +102,8 @@ public class NotificationControllerTest {
     public void whenTheDetailsOfANotificationAreClosed_thenTheNotificationShouldBeRemoved() throws Exception {
         when(notificationWidget.getClosedNotificationIds())
                 .thenReturn(Observable.just("id"));
+        when(notificationService.getNotifications())
+                .thenReturn(Observable.never());
 
         notificationController.init();
 
