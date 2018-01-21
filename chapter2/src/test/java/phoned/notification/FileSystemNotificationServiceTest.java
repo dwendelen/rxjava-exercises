@@ -155,7 +155,15 @@ public class FileSystemNotificationServiceTest {
     }
 
     /*
-     * The service is fixed now. Now we can go fix the UI bug.
+     * The service is fixed now. You want to do a preliminary test of the
+     * notification.
+     *
+     * You start PhoneD and look in the console for the path of the temporary
+     * directory. You prepared some files in advance and you copy them  in the
+     * temporary directory. You see that the notifications appear in the list.
+     * When you click on title, the body is shown. Look good.
+     *
+     * Now we can go fix the UI bug.
      */
 
     /*

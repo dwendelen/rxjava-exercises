@@ -24,7 +24,7 @@ public class NotificationControllerTest {
      * Task 6
      *
      * Your task:
-     * - Implement the first TODO in notificationController.init()
+     * - Implement the first TODO in NotificationController.init()
      * - Do NOT yet implement the second TODO
      *
      * NotificationController is very similar to ClockController. Only this time
@@ -112,10 +112,12 @@ public class NotificationControllerTest {
     }
 
     /*
-     * PhoneD should now be complete. You run PhoneD again and are ready to
-     * test the notifications. You look in the console for the temporary
-     * directory. You prepared some files in advance and copy them in the
-     * temporary directory.
+     * PhoneD is now be complete. You run PhoneD again and are ready to
+     * test the notifications. You copy some files in the temporary directory,
+     * open a notification and close it again.
+     *
+     * As expected, the title is no longer visible on PhoneD. You also notice
+     * that the file has disappeared from the temporary directory.
      *
      * After a long day of hard work, PhoneD is finally working.
      */
