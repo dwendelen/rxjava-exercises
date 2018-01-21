@@ -12,8 +12,11 @@ public class StartersChapter2 {
     private Throwable error = null;
 
     public void observe(Observable<?> observable) {
-        //TODO
-        throw new UnsupportedOperationException();
+        observable.subscribe(
+                e -> nbOfEvents++,
+                e -> error = e,
+                () -> completed = true
+        );
     }
 
     public int getNbOfEvents() {
@@ -36,16 +39,20 @@ public class StartersChapter2 {
      * Returns an Observable that emits a single item and then completes.
      */
     public static <T> Observable<T> just(final T value) {
-        //TODO
-        throw new UnsupportedOperationException();
+        return Observable.create(sub -> {
+            sub.onNext(value);
+            sub.onCompleted();
+        });
     }
 
     /**
      * Converts an {@link Iterable} sequence into an Observable that emits the items in the sequence.
      */
     public static <T> Observable<T> from(Iterable<? extends T> iterable) {        //TODO
-        //TODO
-        throw new UnsupportedOperationException();
+        return Observable.create(sub -> {
+            iterable.forEach(sub::onNext);
+            sub.onCompleted();
+        });
     }
 
     /**
@@ -54,9 +61,18 @@ public class StartersChapter2 {
      * @throws IllegalArgumentException
      *             if {@code count} is less than zero
      */
-    public static Observable<Integer> range(int start, int count) {        //TODO
-        //TODO
-        throw new UnsupportedOperationException();
+    public static Observable<Integer> range(int start, int count) {
+        if(count < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        return Observable.create(sub -> {
+            for(int i = 0; i < count; i++) {
+                sub.onNext(start + i);
+            }
+
+            sub.onCompleted();
+        });
     }
 
     /**
@@ -64,16 +80,14 @@ public class StartersChapter2 {
      * {@link Observer#onCompleted onCompleted} method.
      */
     public static <T> Observable<T> empty() {
-        //TODO
-        throw new UnsupportedOperationException();
+        return Observable.create(Observer::onCompleted);
     }
 
     /**
      * Returns an Observable that never sends any items or notifications to an {@link Observer}.
      */
     public static <T> Observable<T> never() {
-        //TODO
-        throw new UnsupportedOperationException();
+        return Observable.create(sub -> {});
     }
 
     /**
@@ -81,7 +95,6 @@ public class StartersChapter2 {
      * Observer subscribes to it.
      */
     public static <T> Observable<T> error(Throwable exception) {
-        //TODO
-        throw new UnsupportedOperationException();
+        return Observable.create(sub -> sub.onError(exception));
     }
 }
