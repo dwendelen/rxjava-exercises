@@ -10,6 +10,7 @@ public class ClockController {
     }
 
     public void init() {
-        //TODO The widget should somehow be updated when the time changes
+        clockService.getTime()
+                .subscribe(clockWidget::updateTime);
     }
 }

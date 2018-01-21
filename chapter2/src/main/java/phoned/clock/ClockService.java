@@ -9,16 +9,30 @@ public class ClockService {
     private Clock clock;
     private int tickInterval;
 
+    private Observable<LocalDateTime> time;
+
     public ClockService(Clock clock, int tickInterval) {
         this.clock = clock;
         this.tickInterval = tickInterval;
     }
 
     public void init() {
+        time = Observable.<LocalDateTime>create(sub -> {
+            Runnable r = () -> {
+                try {
+                    while (!sub.isUnsubscribed()) {
+                        sub.onNext(LocalDateTime.now(clock));
+                        Thread.sleep(tickInterval);
+                    }
+                } catch (Exception e) {
+                    sub.onError(e);
+                }
+            };
+            new Thread(r).start();
+        }).share();
     }
 
     public Observable<LocalDateTime> getTime() {
-        //TODO Emit the time every tickInterval milliseconds
-        return Observable.just(LocalDateTime.now(clock));
+        return time;
     }
 }

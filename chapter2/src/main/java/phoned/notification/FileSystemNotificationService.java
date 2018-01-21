@@ -1,6 +1,7 @@
 package phoned.notification;
 
 import rx.Observable;
+import rx.Subscriber;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -8,6 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FileSystemNotificationService implements NotificationService {
@@ -15,6 +18,7 @@ public class FileSystemNotificationService implements NotificationService {
     private int pollingInterval;
 
     private Path directory;
+    private Observable<Notification> notifications;
 
     public FileSystemNotificationService(FileSystem fileSystem, int pollingInterval) {
         this.fileSystem = fileSystem;
@@ -24,6 +28,39 @@ public class FileSystemNotificationService implements NotificationService {
     public void init() throws IOException {
         directory = Files.createTempDirectory("phoned-notifications-");
         directory.toFile().deleteOnExit();
+
+        notifications = Observable.<Notification>create(sub -> {
+            Runnable r = () -> {
+                final Set<Path> filesLastIteration = new HashSet<>();
+                try {
+                    while(!sub.isUnsubscribed()) {
+                        Set<Path> filesThisIteration = walkTheDirectoryAndEmitNewFiles(sub, filesLastIteration);
+                        filesLastIteration.clear();
+                        filesLastIteration.addAll(filesThisIteration);
+                        Thread.sleep(pollingInterval);
+                    }
+                } catch (Exception e) {
+                    sub.onError(e);
+                }
+            };
+            new Thread(r).start();
+        }).share();
+    }
+
+    private Set<Path> walkTheDirectoryAndEmitNewFiles(Subscriber<? super Notification> sub, Set<Path> filesInPreviousIteration) throws IOException {
+        Set<Path> filesThisIteration = new HashSet<>();
+        fileSystem.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path path, BasicFileAttributes basicFileAttributes) throws IOException {
+                filesThisIteration.add(path);
+                if(!filesInPreviousIteration.contains(path)) {
+                    Notification notification = createNotificationFromFile(path);
+                    sub.onNext(notification);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+        return filesThisIteration;
     }
 
     public void printDirectoryAndContent() throws IOException {
@@ -41,14 +78,7 @@ public class FileSystemNotificationService implements NotificationService {
 
     @Override
     public Observable<Notification> getNotifications() {
-        //TODO Poll for new files and emit notifications
-        //TODO Remove dummy
-        Notification dummy = new Notification();
-        dummy.id = "dummy";
-        dummy.title = "dummy";
-        dummy.body = "This is a dummy notification.\nIt should be deleted.";
-
-        return Observable.just(dummy);
+        return notifications;
     }
 
     private Notification createNotificationFromFile(Path path) throws IOException {

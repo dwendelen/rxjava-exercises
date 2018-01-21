@@ -2,6 +2,8 @@ package phoned.notification.ui;
 
 import phoned.notification.Notification;
 import rx.Observable;
+import rx.subjects.PublishSubject;
+import rx.subjects.Subject;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -14,6 +16,8 @@ public class NotificationDetailsWidget {
         this.textArea = textArea;
     }
 
+    private Subject<String, String> closedNotificationIds = PublishSubject.create();
+
     public void showDetails(Notification notification) {
         textArea.setText(notification.body);
         textArea.addMouseListener(
@@ -22,7 +26,7 @@ public class NotificationDetailsWidget {
                     public void mouseClicked(MouseEvent e) {
                         textArea.setVisible(false);
                         textArea.removeMouseListener(this);
-                        //TODO Emit an event
+                        closedNotificationIds.onNext(notification.id);
                     }
                 }
         );
@@ -30,6 +34,6 @@ public class NotificationDetailsWidget {
     }
 
     public Observable<String> getClosedNotificationIds() {
-        return Observable.never();
+        return closedNotificationIds;
     }
 }

@@ -12,10 +12,13 @@ public class NotificationController {
     }
 
     public void init() {
-        //TODO The widget should somehow be updated when a notification arrives.
-        //          Do not yet start with the next TODO
+        notificationService.getNotifications()
+                .subscribe(notificationWidget::addNotification);
 
-        //TODO Notifications should somehow be deleted when the widget closed
-        //          the notifications details
+        notificationWidget.getClosedNotificationIds()
+                .subscribe(id -> {
+                    notificationService.removeNotification(id);
+                    notificationWidget.removeNotification(id);
+                });
     }
 }
