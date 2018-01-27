@@ -194,7 +194,7 @@ public class FileSystemNotificationServiceTest {
     private void assertFile1Twice() {
         assertThat(testSubscriber.getOnNextEvents())
                 .extracting(n -> n.title,n -> n.body)
-                .contains(
+                .containsExactly(
                         Tuple.tuple(MockFileSystem.title(1), MockFileSystem.body(1)),
                         Tuple.tuple(MockFileSystem.title(1), MockFileSystem.body(1))
                 );
@@ -204,7 +204,7 @@ public class FileSystemNotificationServiceTest {
                     String[] pieces = notification.id.split("\\|/");
                     return pieces[pieces.length - 1];
                 })
-                .contains(
+                .containsExactly(
                         MockFileSystem.filename(1),
                         MockFileSystem.filename(1)
                 );
