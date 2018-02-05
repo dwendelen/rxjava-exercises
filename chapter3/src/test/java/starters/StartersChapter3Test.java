@@ -7,9 +7,10 @@ import rx.observers.TestSubscriber;
 import rx.schedulers.Schedulers;
 import rx.schedulers.TestScheduler;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -35,7 +36,7 @@ public class StartersChapter3Test {
         mockData(DATA_3, 3);
     }
 
-    /**
+    /*
      * Task 1
      *
      * Your task:
@@ -191,7 +192,7 @@ public class StartersChapter3Test {
         someDataSubscriber.assertCompleted();
     }
 
-    /**
+    /*
      * Task 2
      *
      * Your task:
@@ -237,7 +238,7 @@ public class StartersChapter3Test {
 
     @Test
     public void sleepSort() {
-        Observable<Integer> input = Observable.just(3, 1, 2);
+        Iterable<Integer> input = Arrays.asList(3, 1, 2);
 
         startersChapter3.sleepSort(input)
                 .subscribe(integerSubscriber);
@@ -255,7 +256,7 @@ public class StartersChapter3Test {
 
     @Test
     public void compoundedSleep() {
-        Observable<Integer> input = Observable.just(3, 1, 2);
+        Iterable<Integer> input = Arrays.asList(3, 1, 2);
 
         startersChapter3.compoundedSleep(input)
                 .subscribe(integerSubscriber);
@@ -280,9 +281,7 @@ public class StartersChapter3Test {
         integerSubscriber.assertCompleted();
     }
 
-    //merge, zip, combineLatest, withLatestFrom, amb
-
-    /**
+    /*
      * Task 3
      *
      * Your task:
@@ -297,9 +296,8 @@ public class StartersChapter3Test {
      *     - Observable.merge()
      *     - Observable.withLatestFrom()
      *     - Observable.zip()
-     * The listed methods of StartersChapter3 can be implemented with one of
-     * the listed transformations. It is not necessary to combine multiple
-     * transformations.
+     * The listed methods of StartersChapter3 can be implemented with one or
+     * more of the listed transformations.
      *
      * The details of the expected behaviour can be found in the javadoc of the
      * method that needs to be implemented.
@@ -392,8 +390,27 @@ public class StartersChapter3Test {
     }
 
     @Test
-    public void amb() {
-        throw new UnsupportedOperationException();
+    public void fastestWins_theFastestObservableWins() {
+        Observable<Integer> slow = Observable.just(1, 2, 3).delay(2, TimeUnit.MILLISECONDS);
+        Observable<Integer> fast = Observable.just(4, 5, 6).delay(1, TimeUnit.MILLISECONDS);
+
+        startersChapter3.fastestWins(slow, fast)
+                .subscribe(integerSubscriber);
+
+        integerSubscriber.assertValues(4, 5, 6);
+        integerSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void fastestWins_theFastestObservableAlsoWinsWhenItIsTheSecondArgument() {
+        Observable<Integer> slow = Observable.just(1, 2, 3).delay(2, TimeUnit.MILLISECONDS);
+        Observable<Integer> fast = Observable.just(4, 5, 6).delay(1, TimeUnit.MILLISECONDS);
+
+        startersChapter3.fastestWins(fast, slow)
+                .subscribe(integerSubscriber);
+
+        integerSubscriber.assertValues(4, 5, 6);
+        integerSubscriber.assertCompleted();
     }
 
     @Test
