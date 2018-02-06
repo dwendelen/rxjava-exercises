@@ -24,6 +24,7 @@ public class StartersChapter3Test {
     private TestSubscriber<String> stringSubscriber = TestSubscriber.create();
     private TestSubscriber<SomeData> someDataSubscriber = TestSubscriber.create();
     private TestSubscriber<Pair<Integer, String>> pairSubscriber = TestSubscriber.create();
+    private TestSubscriber<Configuration> configurationSubscriber = TestSubscriber.create();
 
     private static final SomeData DATA_1 = new SomeData("1");
     private static final SomeData DATA_2 = new SomeData("2");
@@ -290,12 +291,15 @@ public class StartersChapter3Test {
      *     - pair
      *     - configuration
      *     - transformWithLatestMode
-     * - Using exactly one of the following transformations:
+     *     - fastestWins
+     *     - index
+     * - Using some of the following transformations:
      *     - Observable.amb()
      *     - Observable.combineLatest()
      *     - Observable.merge()
      *     - Observable.withLatestFrom()
      *     - Observable.zip()
+     *
      * The listed methods of StartersChapter3 can be implemented with one or
      * more of the listed transformations.
      *
@@ -335,8 +339,6 @@ public class StartersChapter3Test {
 
     @Test
     public void configuration_isUpdatedWhenOneOfTheSettingsIsUpdated() {
-        TestSubscriber<Configuration> testSubscriber = TestSubscriber.create();
-
         Observable<String> setting1_1 = delayed("Setting1_1", 0);
         Observable<String> setting2_1 = delayed("Setting2_1", 1);
         Observable<String> setting1_2 = delayed("Setting1_2", 2);
@@ -348,18 +350,18 @@ public class StartersChapter3Test {
         Observable<String> setting2 = Observable.merge(setting2_1, setting2_2, setting2_3);
 
         startersChapter3.configuration(setting1, setting2)
-                .subscribe(testSubscriber);
+                .subscribe(configurationSubscriber);
 
         scheduler.advanceTimeBy(5, TimeUnit.MILLISECONDS);
 
-        testSubscriber.assertValues(
+        configurationSubscriber.assertValues(
                 new Configuration("Setting1_1", "Setting2_1"),
                 new Configuration("Setting1_2", "Setting2_1"),
                 new Configuration("Setting1_2", "Setting2_2"),
                 new Configuration("Setting1_2", "Setting2_3"),
                 new Configuration("Setting1_3", "Setting2_3")
         );
-        testSubscriber.assertCompleted();
+        configurationSubscriber.assertCompleted();
     }
 
     @Test
@@ -432,6 +434,278 @@ public class StartersChapter3Test {
         );
         pairSubscriber.assertCompleted();
     }
+
+    //TODO add task and javadoc
+    /*
+     * Task 4
+     *
+     * Your task:
+     * - Implement the following methods of StartersChapter3:
+     *     - sum
+     *     - continuousSum
+     * - Using some of the following transformations:
+     *     - Observable.reduce()
+     *     - Observable.scan()
+     *
+     * The details of the expected behaviour can be found in the javadoc of the
+     * method that needs to be implemented.
+     */
+
+    @Test
+    public void sum_calculatesTheSumOfTheInput() {
+        Observable<Integer> input = Observable.just(1, 4, 7);
+
+        startersChapter3.sum(input)
+                .subscribe(integerSubscriber);
+
+        integerSubscriber.assertValue(12);
+        integerSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void continuousSum_continuouslyCalculatesTheSumAndEmitsIntermediateResults() {
+        Observable<Integer> input = Observable.just(1, 4, 7);
+
+        startersChapter3.continuousSum(input)
+                .subscribe(integerSubscriber);
+
+        integerSubscriber.assertValues(0, 1, 5, 12);
+        integerSubscriber.assertCompleted();
+    }
+
+    /*
+     * Task 5
+     *
+     * Your task:
+     * - Implement the following methods of StartersChapter3:
+     *     - selectSetting1FromConfigurations
+     *     - selectConfigurationWhereSetting1EqualsBla
+     *     - selectConfigurationLimit5
+     *     - selectConfigurationSkip3
+     *     - selectDistinctSetting1
+     *     - selectCount(configurations)
+     *     - selectSetting2WhereSetting1EqualsBlaLimit1(configurations)
+     *     - selectSetting1GroupBySetting1(configurations)
+     *     - selectCountSetting1GroupBySetting1(configurations)
+     *     - selectCountSetting1GroupBySetting1HavingCountGreaterThan1(configurations)
+     * - Using some of the following transformations:
+     *     - Observable.reduce()
+     *     - Observable.scan()
+     *
+     * The details of the expected behaviour can be found in the javadoc of the
+     * method that needs to be implemented.
+     */
+
+    @Test
+    public void selectSetting1FromConfigurations() {
+        Observable<Configuration> configurations = Observable.just(
+                new Configuration("aaa", "bbb"),
+                new Configuration("bbb", "ccc"),
+                new Configuration("ccc", "ddd")
+        );
+
+        startersChapter3.selectSetting1FromConfigurations(configurations)
+                .subscribe(stringSubscriber);
+
+        stringSubscriber.assertValues("aaa", "bbb", "ccc");
+        stringSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectConfigurationWhereSetting1EqualsBla() {
+        Configuration config1 = new Configuration("bli", "other1");
+        Configuration config2 = new Configuration("blo", "other2");
+        Configuration config3 = new Configuration("bla", "other3");
+        Configuration config4 = new Configuration("bly", "other4");
+        Configuration config5 = new Configuration("bla", "other5");
+
+        Observable<Configuration> configurations = Observable.just(
+                config1,
+                config2,
+                config3,
+                config4,
+                config5
+        );
+
+        startersChapter3.selectConfigurationWhereSetting1EqualsBla(configurations)
+                .subscribe(configurationSubscriber);
+
+        configurationSubscriber.assertValues(config3, config5);
+        configurationSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectConfigurationLimit5() {
+        Configuration config1 = new Configuration("1", "other1");
+        Configuration config2 = new Configuration("2", "other2");
+        Configuration config3 = new Configuration("3", "other3");
+        Configuration config4 = new Configuration("4", "other4");
+        Configuration config5 = new Configuration("5", "other5");
+        Configuration config6 = new Configuration("6", "other6");
+        Configuration config7 = new Configuration("7", "other7");
+
+        Observable<Configuration> configurations = Observable.just(
+                config1,
+                config2,
+                config3,
+                config4,
+                config5,
+                config6,
+                config7
+        );
+
+        startersChapter3.selectConfigurationLimit5(configurations)
+                .subscribe(configurationSubscriber);
+
+        configurationSubscriber.assertValues(
+                config1,
+                config2,
+                config3,
+                config4,
+                config5
+        );
+        configurationSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectConfigurationSkip3() {
+        Configuration config1 = new Configuration("1", "other1");
+        Configuration config2 = new Configuration("2", "other2");
+        Configuration config3 = new Configuration("3", "other3");
+        Configuration config4 = new Configuration("4", "other4");
+        Configuration config5 = new Configuration("5", "other5");
+        Configuration config6 = new Configuration("6", "other6");
+        Configuration config7 = new Configuration("7", "other7");
+
+        Observable<Configuration> configurations = Observable.just(
+                config1,
+                config2,
+                config3,
+                config4,
+                config5,
+                config6,
+                config7
+        );
+
+        startersChapter3.selectConfigurationSkip3(configurations)
+                .subscribe(configurationSubscriber);
+
+        configurationSubscriber.assertValues(
+                config4,
+                config5,
+                config6,
+                config7
+        );
+        configurationSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectDistinctSetting1() {
+        Observable<Configuration> configurations = Observable.just(
+                new Configuration("bli", "other1"),
+                new Configuration("blo", "other2"),
+                new Configuration("bla", "other3"),
+                new Configuration("bly", "other4"),
+                new Configuration("bla", "other5")
+        );
+
+        startersChapter3.selectDistinctSetting1(configurations)
+                .subscribe(stringSubscriber);
+
+        stringSubscriber.assertValues("bli", "blo", "bla", "bly");
+        stringSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectCount() {
+        Observable<Configuration> configurations = Observable.just(
+                new Configuration("1", "other1"),
+                new Configuration("2", "other2"),
+                new Configuration("3", "other3"),
+                new Configuration("4", "other4")
+        );
+
+        startersChapter3.selectCount(configurations)
+                .subscribe(integerSubscriber);
+
+        integerSubscriber.assertValue(4);
+        integerSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectSetting2WhereSetting1EqualsBlaLimit1() {
+        Observable<Configuration> configurations = Observable.just(
+                new Configuration("bli", "other1"),
+                new Configuration("blo", "other2"),
+                new Configuration("bla", "other3"),
+                new Configuration("bly", "other4"),
+                new Configuration("bla", "other5")
+        );
+
+        startersChapter3.selectSetting2WhereSetting1EqualsBlaLimit1(configurations)
+                .subscribe(stringSubscriber);
+
+        stringSubscriber.assertValues("other3");
+        stringSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectSetting1GroupBySetting1() {
+        Observable<Configuration> configurations = Observable.just(
+                new Configuration("bli", "other1"),
+                new Configuration("blo", "other2"),
+                new Configuration("bla", "other3"),
+                new Configuration("bly", "other4"),
+                new Configuration("bla", "other5")
+        );
+
+        startersChapter3.selectSetting1GroupBySetting1(configurations)
+                .subscribe(stringSubscriber);
+
+        assertThat(stringSubscriber.getOnNextEvents())
+                .containsOnly("bli", "blo", "bla", "bly");
+        stringSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectCountSetting1GroupBySetting1() {
+        Observable<Configuration> configurations = Observable.just(
+                new Configuration("bli", "other1"),
+                new Configuration("blo", "other2"),
+                new Configuration("bla", "other3"),
+                new Configuration("bly", "other4"),
+                new Configuration("bla", "other5")
+        );
+
+        startersChapter3.selectCountSetting1GroupBySetting1(configurations)
+                .subscribe(pairSubscriber);
+
+        assertThat(pairSubscriber.getOnNextEvents()).containsOnly(
+                new Pair<>(2, "bla"),
+                new Pair<>(1, "blo"),
+                new Pair<>(1, "bli"),
+                new Pair<>(1, "bly")
+        );
+        pairSubscriber.assertCompleted();
+    }
+
+    @Test
+    public void selectCountSetting1GroupBySetting1HavingCountGreaterThan1() {
+        Observable<Configuration> configurations = Observable.just(
+                new Configuration("bli", "other1"),
+                new Configuration("blo", "other2"),
+                new Configuration("bla", "other3"),
+                new Configuration("bly", "other4"),
+                new Configuration("bla", "other5")
+        );
+
+        startersChapter3.selectCountSetting1GroupBySetting1HavingCountGreaterThan1(configurations)
+                .subscribe(pairSubscriber);
+
+        pairSubscriber.assertValue(new Pair<>(2, "bla"));
+        pairSubscriber.assertCompleted();
+    }
+
 
     private void mockData(SomeData data, int id) {
         Observable<SomeData> observable = delayed(data, id);
