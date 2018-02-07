@@ -393,11 +393,13 @@ public class StartersChapter3Test {
 
     @Test
     public void fastestWins_theFastestObservableWins() {
-        Observable<Integer> slow = Observable.just(1, 2, 3).delay(2, TimeUnit.MILLISECONDS);
-        Observable<Integer> fast = Observable.just(4, 5, 6).delay(1, TimeUnit.MILLISECONDS);
+        Observable<Integer> slow = Observable.just(1, 2, 3).delay(2, TimeUnit.MILLISECONDS, scheduler);
+        Observable<Integer> fast = Observable.just(4, 5, 6).delay(1, TimeUnit.MILLISECONDS, scheduler);
 
         startersChapter3.fastestWins(slow, fast)
                 .subscribe(integerSubscriber);
+
+        scheduler.advanceTimeBy(2, TimeUnit.MILLISECONDS);
 
         integerSubscriber.assertValues(4, 5, 6);
         integerSubscriber.assertCompleted();
@@ -405,11 +407,13 @@ public class StartersChapter3Test {
 
     @Test
     public void fastestWins_theFastestObservableAlsoWinsWhenItIsTheSecondArgument() {
-        Observable<Integer> slow = Observable.just(1, 2, 3).delay(2, TimeUnit.MILLISECONDS);
-        Observable<Integer> fast = Observable.just(4, 5, 6).delay(1, TimeUnit.MILLISECONDS);
+        Observable<Integer> slow = Observable.just(1, 2, 3).delay(2, TimeUnit.MILLISECONDS, scheduler);
+        Observable<Integer> fast = Observable.just(4, 5, 6).delay(1, TimeUnit.MILLISECONDS, scheduler);
 
         startersChapter3.fastestWins(fast, slow)
                 .subscribe(integerSubscriber);
+
+        scheduler.advanceTimeBy(2, TimeUnit.MILLISECONDS);
 
         integerSubscriber.assertValues(4, 5, 6);
         integerSubscriber.assertCompleted();

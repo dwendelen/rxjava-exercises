@@ -394,7 +394,7 @@ public class StartersChapter3 {
      * This method transforms the configurations like the following pseudo SQL
      * statement transforms the rows of table configurations.
      *
-     * SELECT c.setting1 FROM configurations c WHERE c.setting2 = "bla" LIMIT 1
+     * SELECT c.setting2 FROM configurations c WHERE c.setting1 = "bla" LIMIT 1
      */
     public Observable<String> selectSetting2WhereSetting1EqualsBlaLimit1(
             Observable<Configuration> configurations
